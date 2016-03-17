@@ -1,0 +1,4 @@
+# run goodsure.py at 15:29 from Monday to Friday
+
+#29 15 * * 1-5 sh goodsure.sh > log 
+57 16 * * 1-5 /bin/sh /Users/jayson/Documents/git/kundouzhishou/goodsure.sh > /Users/jayson/Documents/git/kundouzhishou/goodsure.log 

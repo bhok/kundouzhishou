@@ -6,10 +6,11 @@ import MySQLdb
 import json
 import configparser
 import logging
+import os
 
-import logging
+dirpath=os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('siatrend')
-hdlr = logging.FileHandler('record.log')
+hdlr = logging.FileHandler(dirpath + '/record.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr) 

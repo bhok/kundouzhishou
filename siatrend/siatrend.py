@@ -59,7 +59,7 @@ def get_info():
 
 def _get_cfg(field):
 	config = configparser.ConfigParser()
-	config.read(dirpath + '/db.ini')
+	config.read_file(dirpath + '/db.ini')
 	return config.get("mysql",field)
 
 if __name__ == "__main__":

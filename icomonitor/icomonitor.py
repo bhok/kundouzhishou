@@ -6,23 +6,21 @@ import MySQLdb
 import json
 import configparser
 import logging
+import logging.config
 import os
 import re
 import httplib, urllib
 from lxml import html
 
 dirpath=os.path.dirname(os.path.abspath(__file__))
-logger = logging.getLogger('icomonitor')
-hdlr = logging.FileHandler(dirpath + '/record.log')
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
-logger.setLevel(logging.DEBUG)
-
-id_file_path = "id.txt"
+print(dirpath)
+logging.config.fileConfig(dirpath + '/../logging.conf')  
+logger = logging.getLogger()  
+id_file_path = dirpath + "/id.txt"
 
 def tick():
 	content = _get_content()
+	# content = _get_content_from_file()
 	lastid = 0
 	if len(content) == 0:
 		return
@@ -32,7 +30,8 @@ def tick():
 	maxid = lastid
 
 	tree = html.fromstring(content)
-	nodes = tree.xpath('//*[@class="windowbg"]/b/span/a')
+	nodes = tree.xpath('//*[@class="windowbg"]/span/a')
+	print(nodes)
 	for node in nodes:
 		url = node.get("href")
 		text = node.text
@@ -50,7 +49,8 @@ def tick():
 
 def _findit(tid, url, title):
 	content = ("tid = {0}, url = {1}, title = ".format(tid, url) + title)
-	logger.debug(content)
+	logger.info(content)
+	_send_sms(content)
 
 
 def _send_sms(content):
@@ -62,7 +62,8 @@ def _send_sms(content):
 			"message": content,
 			"sound":"climb"
 	}), { "Content-type": "application/x-www-form-urlencoded" })
-	logger.debug(conn.getresponse())
+	response = conn.getresponse().read()
+	logger.debug("send sms:" + response)
 
 
 def _get_content():

@@ -13,7 +13,6 @@ import httplib, urllib
 from lxml import html
 
 dirpath=os.path.dirname(os.path.abspath(__file__))
-print(dirpath)
 logging.config.fileConfig(dirpath + '/../logging.conf')  
 logger = logging.getLogger()  
 id_file_path = dirpath + "/id.txt"

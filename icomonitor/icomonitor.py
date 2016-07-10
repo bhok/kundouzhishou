@@ -48,7 +48,7 @@ def tick():
 		wf.write(str(maxid))
 
 def _findit(tid, url, title):
-	content = ("tid = {0}, url = {1}, title = ".format(tid, url) + title)
+	content = ("tid = {0}\n url = {1}\n title = ".format(tid, url) + title)
 	logger.info(content)
 	_send_sms(content)
 
@@ -81,4 +81,4 @@ def _get_content_from_file():
 
 if __name__ == "__main__":
 	tick()
-	# _send_sms("hello jsy")
+	# _send_sms("url = xxx \n tid = xxx\n name=xxx")

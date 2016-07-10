@@ -30,7 +30,6 @@ def tick():
 
 	tree = html.fromstring(content)
 	nodes = tree.xpath('//*[@class="windowbg"]/span/a')
-	print(nodes)
 	for node in nodes:
 		url = node.get("href")
 		text = node.text

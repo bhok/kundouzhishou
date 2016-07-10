@@ -13,7 +13,6 @@ import httplib, urllib
 from lxml import html
 
 dirpath=os.path.dirname(os.path.abspath(__file__))
-print(dirpath)
 logging.config.fileConfig(dirpath + '/../logging.conf')  
 logger = logging.getLogger()  
 id_file_path = dirpath + "/id.txt"
@@ -31,7 +30,6 @@ def tick():
 
 	tree = html.fromstring(content)
 	nodes = tree.xpath('//*[@class="windowbg"]/span/a')
-	print(nodes)
 	for node in nodes:
 		url = node.get("href")
 		text = node.text

@@ -41,29 +41,26 @@ API_PATH_DICT = {
     'multi_orders': '%s/orders/multi.json',
 }
 
-def get_api_path(name):
-    path_pattern = API_PATH_DICT[name]
-    return path_pattern % API_BASE_PATH
-
 class yunbi():
 
-    def __init__(self, access_key=None, secret_key=None):
-        if access_key and secret_key:
-            self.auth = Auth(access_key, secret_key)
-        else:
-            from conf import ACCESS_KEY, SECRET_KEY
-            self.auth = Auth(ACCESS_KEY, SECRET_KEY)
+    def __init__(self, access_key, secret_key):
+        self.auth = Auth(access_key, secret_key)
 
-    def get(self, path, params=None):
+    def get(self, cmd, params=None):
+        path = self._get_api_path(cmd)
         verb = "GET"
         signature, query = self.auth.sign_params(verb, path, params)
         url = "%s%s?%s&signature=%s" % (BASE_URL, path, query, signature)
+
+        print("url = " + url)
+
         resp = urllib2.urlopen(url)
         data = resp.readlines()
         if len(data):
             return json.loads(data[0])
 
-    def post(self, path, params=None):
+    def post(self, cmd, params=None):
+        path = self._get_api_path(cmd)
         verb = "POST"
         print params
         signature, query = self.auth.sign_params(verb, path, params)
@@ -75,6 +72,10 @@ class yunbi():
         data = resp.readlines()
         if len(data):
             return json.loads(data[0])
+
+    def _get_api_path(self, name):
+        path_pattern = API_PATH_DICT[name]
+        return path_pattern % API_BASE_PATH
 
 class Auth():
     def __init__(self, access_key, secret_key):

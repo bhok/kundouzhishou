@@ -7,7 +7,6 @@ import configparser
 import logging
 import logging.config
 import os
-# from exchange.poloniex import poloniex
 
 import exchange
 
@@ -27,6 +26,7 @@ def _test_poloniex():
 def _test_yunbi():
 	apikey = str(_get_cfg("yunbi", "apikey"))
 	secret = str(_get_cfg("yunbi", "secret"))
+	print(apikey)
 
 def _get_cfg(section, field):
 	config = configparser.ConfigParser()
@@ -34,5 +34,5 @@ def _get_cfg(section, field):
 	return config.get(section,field)
 
 if __name__ == "__main__":
-	_test()
+	_test_yunbi()
 

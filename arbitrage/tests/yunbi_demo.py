@@ -1,43 +1,50 @@
 import time
+import os
 import urllib2
 from context import yunbi
+from context import conf
 
-client = yunbi(access_key='W8xUmiFhnO5x67IrLUUkN9COveQCWVY4LtFk4O5i-GVPN4Y3O-2OYA0EI5-IV1MVPQR', secret_key='xff0A12oxB43bEUeVB1I30elinH8UWxThkLklOdl')
+dirpath=os.path.dirname(os.path.abspath(__file__))
+conf.init(dirpath + "/../account.ini")
+apikey = str(conf.get_value("yunbi", "apikey"))
+secret = str(conf.get_value("yunbi", "secret"))
+
+client = yunbi(access_key=apikey, secret_key=secret)
 
 #demo of GET APIs
 
 #get member info
-print client.get(client.get_api_path('members'))
+print client.get('members')
 
 #get markets
-markets =  client.get(get_api_path('markets'))
+markets =  client.get('markets')
 print "markets:", markets
 
 #get tickers of each market
 #market should be specified in url
 print 
 print "tickers in markets"
-for market in markets:
-    print client.get(get_api_path('tickers') % market['id'])
+# for market in markets:
+    # print client.get_by_path(client.get_api_path('tickers') % market['id'])
 
 #get orders of each market
 #market should be specified in params
 print 
 print "orders in markets"
 for market in markets:
-    print client.get(get_api_path('orders'), {'market': market['id']})
+    print client.get('orders', {'market': market['id']})
 
 #get order book
-print client.get(get_api_path('order_book'), params={'market': 'btccny'})
+print client.get('order_book', params={'market': 'btccny'})
 
 #get tardes
-print client.get(get_api_path('trades'), params={'market': 'btccny'})
+print client.get('trades', params={'market': 'btccny'})
 
 #get my trades
-print client.get(get_api_path('my_trades'), params={'market': 'btccny'})
+print client.get('my_trades', params={'market': 'btccny'})
 
 #get k line
-print client.get(get_api_path('k'), params={'market': 'btccny'})
+print client.get('k', params={'market': 'btccny'})
 
 
 #demo of POST APIs

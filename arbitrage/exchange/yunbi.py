@@ -4,6 +4,7 @@ import hmac
 import hashlib
 import time
 import urllib
+import requests
 
 BASE_URL = 'https://yunbi.com'
 
@@ -47,35 +48,49 @@ class yunbi():
         self.auth = Auth(access_key, secret_key)
 
     def get(self, cmd, params=None):
-        path = self._get_api_path(cmd)
+        path = self.get_api_path(cmd)
+        return self.get_by_path(path, params)
+
+    def get_by_path(self, path, params=None):
         verb = "GET"
         signature, query = self.auth.sign_params(verb, path, params)
         url = "%s%s?%s&signature=%s" % (BASE_URL, path, query, signature)
 
         print("url = " + url)
 
-        resp = urllib2.urlopen(url)
-        data = resp.readlines()
-        if len(data):
-            return json.loads(data[0])
+        # try:
+        #     resp = urllib2.urlopen(url)
+        #     data = resp.readlines()
+        # except urllib2.HTTPError, error:
+        #     data = error.read()
+        #     print "error=", data
+
+        # if len(data):
+        #     return json.loads(data[0])
+
+        response = requests.get(url)
+        return self._get_content(response)
 
     def post(self, cmd, params=None):
-        path = self._get_api_path(cmd)
+        path = self.get_api_path(cmd)
         verb = "POST"
-        print params
         signature, query = self.auth.sign_params(verb, path, params)
         url = "%s%s" % (BASE_URL, path)
         data = "%s&signature=%s" % (query, signature)
-        print data
-        print url
-        resp = urllib2.urlopen(url, data)
-        data = resp.readlines()
-        if len(data):
-            return json.loads(data[0])
 
-    def _get_api_path(self, name):
+        print "url=",url
+        print "data=",data
+
+        response = requests.get(url)
+        return self._get_content(response)
+
+    def get_api_path(self, name):
         path_pattern = API_PATH_DICT[name]
         return path_pattern % API_BASE_PATH
+
+    def _get_content(self, response):
+        print "response = ",response.content
+        return json.loads(response.content)
 
 class Auth():
     def __init__(self, access_key, secret_key):

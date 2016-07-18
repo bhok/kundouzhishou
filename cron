@@ -1,2 +1,5 @@
 # siatrend
-00 * * * * python /home/root/git/kundouzhishou/siatrend/siatrend.py
+00 * * * * python /home/jsy/git/kundouzhishou/siatrend/siatrend.py
+
+# icomonitor
+00 * * * * cd /home/jsy/git/kundouzhishou/icomonitor && python icomonitor.py

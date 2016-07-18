@@ -57,7 +57,9 @@ def test():
 	# params = {'market': 'sccny', 'side': 'sell', 'volume': 10, 'price': 0.001}
 	# res = client.post('orders', params)
 
-	print client.post('clear',None, False)
+	# print client.post('clear',None, False)
+
+	print client.get('order_book', params={'market': 'sccny','asks_limit': 50, 'bids_limit':50})
 
 	# res = client.get('markets')
 

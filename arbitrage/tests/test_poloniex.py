@@ -21,8 +21,11 @@ class BasicTestSuite(unittest.TestCase):
 		balances = self.client.returnBalances()
 		print(balances)
 
+	def test_return_order_books(self):
+		print self.client.returnOrderBook("BTC_SC")
 
-
+	def test_return_open_orders(self):
+		print self.client.returnOpenOrders("BTC_SC")
 
 if __name__ == '__main__':
     unittest.main()

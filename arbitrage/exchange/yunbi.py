@@ -47,50 +47,48 @@ class yunbi():
     def __init__(self, access_key, secret_key):
         self.auth = Auth(access_key, secret_key)
 
-    def get(self, cmd, params=None):
+    def get(self, cmd, params=None, is_try=None):
         path = self.get_api_path(cmd)
-        return self.get_by_path(path, params)
+        return self.get_by_path(path, params, is_try)
 
-    def get_by_path(self, path, params=None):
+    def get_by_path(self, path, params=None, is_try=None):
         verb = "GET"
-        signature, query = self.auth.sign_params(verb, path, params)
+        signature, query, params = self.auth.sign_params(verb, path, params)
         url = "%s%s?%s&signature=%s" % (BASE_URL, path, query, signature)
 
         print("url = " + url)
 
-        # try:
-        #     resp = urllib2.urlopen(url)
-        #     data = resp.readlines()
-        # except urllib2.HTTPError, error:
-        #     data = error.read()
-        #     print "error=", data
+        if not is_try:
+            response = requests.get(url)
+            return self._get_content(response)
+        
 
-        # if len(data):
-        #     return json.loads(data[0])
-
-        response = requests.get(url)
-        return self._get_content(response)
-
-    def post(self, cmd, params=None):
+    def post(self, cmd, params=None, is_try=None):
         path = self.get_api_path(cmd)
         verb = "POST"
-        signature, query = self.auth.sign_params(verb, path, params)
+        signature, query, params = self.auth.sign_params(verb, path, params)
         url = "%s%s" % (BASE_URL, path)
         data = "%s&signature=%s" % (query, signature)
+        params.update({'signature':signature})
 
         print "url=",url
         print "data=",data
 
-        response = requests.get(url)
-        return self._get_content(response)
+        if not is_try:
+            response = requests.post(url, data=params)
+            return self._get_content(response)
 
     def get_api_path(self, name):
         path_pattern = API_PATH_DICT[name]
         return path_pattern % API_BASE_PATH
 
     def _get_content(self, response):
-        print "response = ",response.content
+        print "code = ", response.status_code, "response = ",response.content
         return json.loads(response.content)
+
+    def _get_headers(self):
+        headers = {'Content-Type': 'my-app/0.0.1application/x-www-form-urlencoded', 'Accept':'application/json'}
+        return headers
 
 class Auth():
     def __init__(self, access_key, secret_key):
@@ -128,4 +126,4 @@ class Auth():
         params.update({'tonce': int(1000*time.time()), 'access_key': self.access_key})
         query = self.urlencode(params)
         signature = self.sign(verb, path, params)
-        return signature, query
+        return signature, query, params

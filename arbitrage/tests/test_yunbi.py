@@ -57,11 +57,9 @@ def test():
 	# params = {'market': 'sccny', 'side': 'sell', 'volume': 10, 'price': 0.001}
 	# res = client.post('orders', params)
 
-	res = client.post('clear')
+	print client.post('clear',None, False)
 
 	# res = client.get('markets')
-
-	print(res)
 
 if __name__ == '__main__':
     # unittest.main()

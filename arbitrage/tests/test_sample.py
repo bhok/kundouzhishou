@@ -1,6 +1,7 @@
 from context import exchange
 
 import unittest
+import requests
 
 class BasicTestSuite(unittest.TestCase):
     def test_hmm(self):

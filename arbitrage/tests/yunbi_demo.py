@@ -46,6 +46,9 @@ print client.get('my_trades', params={'market': 'btccny'})
 #get k line
 print client.get('k', params={'market': 'btccny'})
 
+#clear all orders in all markets
+print client.post('clear')
+
 
 #demo of POST APIs
 #DANGROUS, you better use test account to debug POST APIs

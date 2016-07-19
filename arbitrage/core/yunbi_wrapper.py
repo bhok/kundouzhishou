@@ -55,29 +55,10 @@ class order():
 		self.id = 0
 		self.market = 'sccny'
 
-		self.update(**dict((k, self.parse(v))
-                           for k, v in source.iteritems()))
-
-		exit()
-
-		print(dir(source))
-		print(dir(self))
-
-		# self.__dict__ = source.__dict__.copy()
-		# self._parse(source)
-
-	# def _parse(self, source):
-	# 	self.__dict__.update(source.__dict__)
-	# 	return self
+		for k,v in source.iteritems():
+			if hasattr(self, k):
+				setattr(self,k, v)
 
 if __name__ == '__main__':
-	# t1 = {"a":0}
-
-	# t2 = {"a":1,"b":2}
-
-	# print(t2.iteritems())
-
-	# exit()
-
 	wrapper = yunbi_wrapper()
 	print(wrapper.order_book())

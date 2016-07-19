@@ -6,3 +6,4 @@ import exchange.yunbi as yunbi
 import exchange.poloniex as poloniex
 import core.conf as conf
 import core.core as core
+import core.poloniex_wrapper as poloniex_wrapper

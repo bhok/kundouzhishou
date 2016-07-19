@@ -21,6 +21,7 @@ class poloniex_wrapper():
 			result[interested_key] = {"balance":info[interested_key.upper()],'locked':0}
 		return result
 
+	# {u'bids': [[u'0.00000100', 2911945.7967204], [u'0.00000099', 1475490.160369], [u'0.00000098', 12760756.47514],
 	def order_book(self):
 		info = self.client.returnOrderBook(currency_pair)
 		bids = info["bids"]

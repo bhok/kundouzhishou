@@ -3,10 +3,15 @@ import time
 import json
 import os
 import httplib, urllib
+import logging
+import logging.config
 
 dirpath=os.path.dirname(os.path.abspath(__file__))
 yunbi_file_path = dirpath + "/yunbi.json"
 bittrex_file_path = dirpath + "/bittrex.json"
+
+logging.config.fileConfig(dirpath + '/../logging.conf')  
+logger = logging.getLogger()
 
 def check_yunbi():
 	page = requests.get('https://yunbi.com//api/v2/markets.json')
@@ -68,7 +73,6 @@ def _check_exchange(name, url):
 		print("http error code = " + str(page.status_code))
 		return 
 	new_data = json.loads(page.content)
-	print(new_data)
 	with open(filepath, 'r') as rf:
 		old_data = json.loads(rf.read())
 		if len(old_data) > 0:
@@ -92,7 +96,7 @@ def _check_exchange(name, url):
 
 
 def _send_sms(content):
-	print(content)
+	logger.info(content)
 	conn = httplib.HTTPSConnection("api.pushover.net:443")
 	conn.request("POST", "/1/messages.json",
 		urllib.urlencode({

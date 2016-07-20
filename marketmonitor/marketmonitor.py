@@ -29,6 +29,32 @@ def check_yunbi():
 	with(open(yunbi_file_path, 'wb')) as rf:
 		rf.write(page.content)
 
+def check_poloniex():
+	page = requests.get('https://poloniex.com/public?command=returnTicker')
+	if page.status_code != 200:
+		return 
+	new_data = json.loads(page.content)
+	with open(poloniex_file_path, 'r') as rf:
+		old_data = json.loads(rf.read())
+		if len(old_data) > 0:
+			for new_item in new_data:
+				has_tag = False
+				for old_item in old_data:
+					if new_item == old_item:
+						has_tag = True
+						break
+
+				if has_tag == False:
+					_send_sms("poloniex: " + str(new_item))
+
+	data = []
+	for k,v in new_data.iteritems():
+		data.append(k)
+
+	# print(data)
+	with(open(poloniex_file_path, 'wb')) as rf:
+		rf.write(json.dumps(data))
+
 
 def _send_sms(content):
 	print(content)
@@ -44,4 +70,5 @@ def _send_sms(content):
 
 if __name__ == "__main__":
 	check_yunbi()
+	check_poloniex()
 	# _send_sms("test")

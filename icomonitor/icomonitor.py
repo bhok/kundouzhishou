@@ -78,6 +78,5 @@ def _get_content_from_file():
 	return content
 
 if __name__ == "__main__":
-	logger.info("test")
-	# tick()
+	tick()
 	# _send_sms("url = xxx \n tid = xxx\n name=xxx")

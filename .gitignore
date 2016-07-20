@@ -1,3 +1,13 @@
 # vim
 *.swp
 
+# config
+*.ini
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# system
+*.DS_Store

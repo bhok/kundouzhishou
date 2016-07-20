@@ -5,15 +5,18 @@ import MySQLdb
 import json
 import configparser
 import logging
+import logging.config
 import os
 
+import exchange
+
 dirpath=os.path.dirname(os.path.abspath(__file__))
-logger = logging.getLogger('siatrend')
-hdlr = logging.FileHandler(dirpath + '/record.log')
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
-logger.setLevel(logging.DEBUG)
+logging.config.fileConfig(dirpath + '/../logging.conf')  
+logger = logging.getLogger()
+
+def run():
+	
 
 if __name__ == "__main__":
-	logger.debug("test")
+	_test_yunbi()
+

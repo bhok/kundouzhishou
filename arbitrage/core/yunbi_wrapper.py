@@ -2,6 +2,7 @@ from context import yunbi
 import conf
 import os
 from copy import copy
+from order import yunbi_order
 
 interested_list = ["cny", "btc","sc"]
 market = 'sccny'
@@ -13,6 +14,12 @@ class yunbi_wrapper():
 		apikey = str(conf.get_value("yunbi", "apikey"))
 		secret = str(conf.get_value("yunbi", "secret"))
 		self.client = yunbi(apikey, secret)
+
+	def btc_cny_rate(self):
+		path = self.client.get_api_path('tickers') % "btccny"
+		info = self.client.get_by_path(path, {}, False)
+		return info["ticker"]["last"]
+
 
 	# "accounts":[{"currency":"cny","balance":"0.0","locked":"0.0"},{}]
 	def balance(self):
@@ -26,38 +33,32 @@ class yunbi_wrapper():
 
 		return result
 
+	# {u'created_at': u'2016-07-22T15:19:31Z', u'trades_count': 0, u'remaining_volume': u'1257807.0', u'price': u'0.00463', u'side': u'buy', u'volume': u'1257807.0', u'state': u'wait', u'ord_type': u'limit', u'avg_price': u'0.0', u'executed_volume': u'0.0', u'id': 221602221, u'market': u'sccny'}
 	def order_book(self):
 		info = self.client.get('order_book', params={'market': market,'asks_limit': 50, 'bids_limit':50})
-		asks = []
-		for ask_item in info["asks"]:
-			order_ask = order(ask_item)
-			asks.append(order_ask)
-		bids = []
-		for bid_item in info['bids']:
-			order_bid = order(bid_item)
-			bids.append(bid_item)
+		asks = self._parse_order(info["asks"])
+		bids = self._parse_order(info["bids"])
 
-		return asks, bids
+		asks = sorted(asks, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=False)
+		bids = sorted(bids, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=True)
+
+		return bids,asks
+
+	def _parse_order(self, orders):
+		result = []
+		for order in orders:
+			find_tag = False
+			for old_order in result:
+				if old_order["price"] == order["price"]:
+					find_tag = True
+					old_order["volume"] = float(old_order["volume"]) + float(order["remaining_volume"])
+
+			if not find_tag:
+				result.append({"volume":float(order["remaining_volume"]), "price":float(order["price"]),"currency":"cny"})
 
 
-class order():
-	def __init__(self, source):
-		self.created_at = ''
-		self.trades_count = 0
-		self.remaining_volume = 0
-		self.price = 0
-		self.side = 'buy'
-		self.volume = 0
-		self.state = 'wait'
-		self.ord_type = 'limit'
-		self.avg_price = 0
-		self.executed_volume = 0
-		self.id = 0
-		self.market = 'sccny'
+		return result
 
-		for k,v in source.iteritems():
-			if hasattr(self, k):
-				setattr(self,k, v)
 
 if __name__ == '__main__':
 	wrapper = yunbi_wrapper()

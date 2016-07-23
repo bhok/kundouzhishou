@@ -24,9 +24,18 @@ class poloniex_wrapper():
 	# {u'bids': [[u'0.00000100', 2911945.7967204], [u'0.00000099', 1475490.160369], [u'0.00000098', 12760756.47514],
 	def order_book(self):
 		info = self.client.returnOrderBook(currency_pair)
-		bids = info["bids"]
-		asks = info["asks"]
-		return info
+		bids = []
+		for bid_item in info["bids"]:
+			bids.append({"volume":bid_item[1], "price":bid_item[0], "currency":"btc"})
+
+		asks = []
+		for ask_item in info["asks"]:
+			asks.append({"volume":float(ask_item[1]), "price":float(ask_item[0]), "currency":"btc"})
+
+		asks = sorted(asks, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=False)
+		bids = sorted(bids, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=True)
+
+		return bids,asks
 
 if __name__ == '__main__':
 	wrapper = poloniex_wrapper()

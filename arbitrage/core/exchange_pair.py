@@ -1,23 +1,39 @@
-from context import yunbi
-from context import poloniex
-
-dirpath=os.path.dirname(os.path.abspath(__file__))
-conf.init(dirpath + "/../account.ini")
+from poloniex_wrapper import poloniex_wrapper
+from yunbi_wrapper import yunbi_wrapper
 
 class exchange_pair():
-
-	def __init__(self, currency_pair):
-		apikey = str(conf.get_value("yunbi", "apikey"))
-		secret = str(conf.get_value("yunbi", "secret"))
-		self._yunbi_client = yunbi(apikey, secret)
-
-		apikey = str(conf.get_value("poloniex", "apikey"))
-		secret = str(conf.get_value("poloniex", "secret"))
-		self._poloniex_client = poloniex(apikey, secret)
+	def __init__(self, currency_pair, ex_yunbi, exA, exB):
+		self._ex_yunbi = ex_yunbi
+		self._ex_A = exA
+		self._ex_B = exB
 
     def run(self):
-    	return
+    	self._btc_cny_rate = self._ex_yunbi.btc_cny_rate()
 
-    def _check(self):
+    	self._balance_A = self._ex_A.balance()
+    	self._balance_B = self._ex_B.balance()
+
+    	A_bids, A_asks = self._ex_A.order_book()
+    	B_bids, B_asks = self._ex_B.order_book()
+
+    	self._check(A_bids,A_asks,B_bids,B_asks)
+
+    def _check(self, A_bids, A_asks, B_bids, B_asks):
+
+    	
+
+    def _check_bid_ask(self, bids, asks):
+    	bids = _transfor_currency(bids)
+    	asks = _transfor_currency(asks)
+
+    	
+    	
+    def _transfor_currency(self, order_list):
+    	for order in order_list:
+    		if order["currency"] == "btc":
+    			order["price"] = order["price"] * self._btc_cny_rate
+    			order["curreny"] = "cny"
+
+    	return order_list
     	
 

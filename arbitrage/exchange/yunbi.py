@@ -47,14 +47,17 @@ class yunbi():
     def __init__(self, access_key, secret_key):
         self.auth = Auth(access_key, secret_key)
 
-    def get(self, cmd, params=None, is_try=None):
+    def get(self, cmd, params=None, use_sig=True, is_try=None):
         path = self.get_api_path(cmd)
-        return self.get_by_path(path, params, is_try)
+        return self.get_by_path(path, params, use_sig, is_try)
 
-    def get_by_path(self, path, params=None, is_try=None):
+    def get_by_path(self, path, params=None, use_sig = True, is_try=None):
         verb = "GET"
         signature, query, params = self.auth.sign_params(verb, path, params)
-        url = "%s%s?%s&signature=%s" % (BASE_URL, path, query, signature)
+        url = "%s%s" % (BASE_URL, path)
+
+        if use_sig:
+            url = url + "?%s&signature=%s" % (query, signature)
 
         print("url = " + url)
 

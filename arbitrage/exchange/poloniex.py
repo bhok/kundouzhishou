@@ -49,6 +49,7 @@ class poloniex():
 
             ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/tradingApi', post_data, headers))
             jsonRet = json.loads(ret.read())
+            print('poloniex response: ',jsonRet)
             return self.post_process(jsonRet)
 
 

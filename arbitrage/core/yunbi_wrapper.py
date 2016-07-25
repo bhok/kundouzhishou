@@ -2,7 +2,6 @@ from context import yunbi
 import conf
 import os
 from copy import copy
-from order import yunbi_order
 
 interested_list = ["cny", "btc","sc"]
 market = 'sccny'
@@ -18,7 +17,7 @@ class yunbi_wrapper():
 	def btc_cny_rate(self):
 		path = self.client.get_api_path('tickers') % "btccny"
 		info = self.client.get_by_path(path, {}, False)
-		return info["ticker"]["last"]
+		return float(info["ticker"]["last"])
 
 
 	# "accounts":[{"currency":"cny","balance":"0.0","locked":"0.0"},{}]

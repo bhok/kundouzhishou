@@ -22,10 +22,10 @@ class BasicTestSuite(unittest.TestCase):
 		info = self.client.get('members')
 		print(info)
 
-	# def test_get_ticker(self):
-	# 	path = self.client.get_api_path('tickers') % "sccny"
-	# 	info = self.client.get_by_path(path)
-	# 	print(info)
+	def test_get_ticker(self):
+		path = self.client.get_api_path('tickers') % "btccny"
+	 	info = self.client.get_by_path(path)
+	 	print(info)
 
 	# Get the order book of specified market
 	def test_get_order_book(self):
@@ -59,7 +59,10 @@ def test():
 
 	# print client.post('clear',None, False)
 
-	print client.get('order_book', params={'market': 'sccny','asks_limit': 50, 'bids_limit':50})
+	path = client.get_api_path('tickers') % "btccny"
+	print(client.get_by_path(path, {}, False))
+
+	# print client.get('order_book', params={'market': 'sccny','asks_limit': 50, 'bids_limit':50})
 
 	# res = client.get('markets')
 

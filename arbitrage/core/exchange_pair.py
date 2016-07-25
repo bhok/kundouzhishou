@@ -4,7 +4,7 @@ from poloniex_wrapper import poloniex_wrapper
 from yunbi_wrapper import yunbi_wrapper
 
 TRX_FEE = 0.003
-MIN_EXPECT_PROFIT = 50
+MIN_EXPECT_PROFIT = 20
 
 class exchange_pair():
 	def __init__(self, ex_yunbi, exA, exB):

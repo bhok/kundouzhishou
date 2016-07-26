@@ -23,14 +23,14 @@ class exchange_pair():
 
 		target_volume, expect_income = self._check_bid_ask(A_bids, B_asks)
 		if expect_income > MIN_EXPECT_PROFIT:
-			info = "except profit = " + str(expect_income)
+			info = "except profit=" + str(expect_income) + " volume=" + str(target_volume)
 			return info
 			# TODO check balance and sell
 			# self._execute(target_volume, self._ex_A, self._ex_B)
 
 		target_volume, expect_income = self._check_bid_ask(B_bids, A_asks)
 		if expect_income > MIN_EXPECT_PROFIT:
-			info = "except profit = " + str(expect_income)
+			info = "except profit = " + str(expect_income) + " volume=" + str(target_volume)
 			return info
 			# TODO check balance and sell
 			# self._execute(target_volume, self._ex_B, self._ex_A)

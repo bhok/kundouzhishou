@@ -22,7 +22,6 @@ def run():
 		_send_sms(info)
 
 def _send_sms(content):
-	logger.info(content)
 	conn = httplib.HTTPSConnection("api.pushover.net:443")
 	conn.request("POST", "/1/messages.json",
 		urllib.urlencode({

@@ -3,8 +3,8 @@ import conf
 import os
 from copy import copy
 
-interested_list = ["cny", "btc","sc"]
-market = 'sccny'
+interested_list = ["cny", "btc","eth"]
+market = 'ethcny'
 
 class yunbi_wrapper():
 	def __init__(self):

@@ -2,8 +2,8 @@ from context import poloniex
 import conf
 import os
 
-interested_list = ["btc","sc"]
-currency_pair = "BTC_SC"
+interested_list = ["btc","eth"]
+currency_pair = "BTC_ETH"
 
 class poloniex_wrapper():
 	def __init__(self):

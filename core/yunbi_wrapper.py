@@ -4,15 +4,11 @@ import os
 from copy import copy
 
 interested_list = ["cny", "btc","eth"]
-market = 'ethcny'
 
 class yunbi_wrapper():
-	def __init__(self):
-		dirpath=os.path.dirname(os.path.abspath(__file__))
-		conf.init(dirpath + "/../account.ini")
-		apikey = str(conf.get_value("yunbi", "apikey"))
-		secret = str(conf.get_value("yunbi", "secret"))
+	def __init__(self, currency_pair, apikey, secret):
 		self.client = yunbi(apikey, secret)
+		self.currency_pair = currency_pair
 
 	def btc_cny_rate(self):
 		path = self.client.get_api_path('tickers') % "btccny"
@@ -34,7 +30,7 @@ class yunbi_wrapper():
 
 	# {u'created_at': u'2016-07-22T15:19:31Z', u'trades_count': 0, u'remaining_volume': u'1257807.0', u'price': u'0.00463', u'side': u'buy', u'volume': u'1257807.0', u'state': u'wait', u'ord_type': u'limit', u'avg_price': u'0.0', u'executed_volume': u'0.0', u'id': 221602221, u'market': u'sccny'}
 	def order_book(self):
-		info = self.client.get('order_book', params={'market': market,'asks_limit': 50, 'bids_limit':50})
+		info = self.client.get('order_book', params={'market': self.currency_pair,'asks_limit': 50, 'bids_limit':50})
 		asks = self._parse_order(info["asks"])
 		bids = self._parse_order(info["bids"])
 
@@ -60,5 +56,5 @@ class yunbi_wrapper():
 
 
 if __name__ == '__main__':
-	wrapper = yunbi_wrapper()
+	wrapper = yunbi_wrapper("ethcny")
 	print(wrapper.order_book())

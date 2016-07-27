@@ -8,7 +8,7 @@ import unittest
 
 class BasicTestSuite(unittest.TestCase):
 	def setUp(self):
-		self.exchange_pair = exchange_pair(None,None,None,None)
+		self.exchange_pair = exchange_pair(None,None,None)
 		self.exchange_pair._btc_cny_rate = 10
 
 	def test_check(self):

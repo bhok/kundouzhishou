@@ -1,3 +1,15 @@
 2016-07-11 12:30:48,877 INFO     test
 2016-07-25 14:20:14,990 INFO     exchange_pair 
 2016-07-25 14:44:27,300 INFO     exccept profit = 1.14133218389
+2016-07-27 07:22:28,924 INFO     test
+2016-07-27 07:22:58,515 INFO     test
+2016-07-27 07:24:06,754 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 07:24:07,321 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 07:24:09,494 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 07:24:51,470 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 07:24:51,613 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 07:24:52,761 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 08:12:03,043 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 08:12:03,191 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 08:12:04,700 INFO     Starting new HTTPS connection (1): yunbi.com
+2016-07-27 08:12:06,341 INFO     except profit = 164.902898573

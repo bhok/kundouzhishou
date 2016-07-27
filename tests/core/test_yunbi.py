@@ -4,14 +4,14 @@ from context import yunbi
 from context import conf
 from context import core
 
+from context import _get_value
+
 import unittest
 
 class BasicTestSuite(unittest.TestCase):
 	def setUp(self):
-		dirpath=os.path.dirname(os.path.abspath(__file__))
-		conf.init(dirpath + "/../account.ini")
-		apikey = str(conf.get_value("yunbi", "apikey"))
-		secret = str(conf.get_value("yunbi", "secret"))
+		apikey = _get_value('yunbi','apikey')
+		secret = _get_value('yunbi','secret')
 		self.client = yunbi(apikey, secret)
 
 	def test_get_markets(self):
@@ -49,10 +49,8 @@ class BasicTestSuite(unittest.TestCase):
 		print(res)
 
 def test():
-	dirpath=os.path.dirname(os.path.abspath(__file__))
-	conf.init(dirpath + "/../account.ini")
-	apikey = str(conf.get_value("yunbi", "apikey"))
-	secret = str(conf.get_value("yunbi", "secret"))
+	apikey = _get_value('yunbi','apikey')
+	secret = _get_value('yunbi','secret')
 	client = yunbi(apikey, secret)
 	# params = {'market': 'sccny', 'side': 'sell', 'volume': 10, 'price': 0.001}
 	# res = client.post('orders', params)

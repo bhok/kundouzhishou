@@ -46,7 +46,7 @@ def get_info():
 		# height,total_coins,difficulty,hashrate,timestamp,active_file_contracts,total_file_contract_cost,total_file_contract_size,storage_proofs)
 	
 	logger.debug("record successful !")
-	sql = "insert into json_record(data) value('{0}')".format(db.escape_string(str(page.text)))
+	sql = "insert into siatrend(data) value('{0}')".format(db.escape_string(str(page.text)))
 
 	try:
 		cursor.execute(sql)

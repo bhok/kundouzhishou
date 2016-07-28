@@ -8,11 +8,15 @@ class BasicTestSuite(unittest.TestCase):
 	def setUp(self):
 		self.wrapper = yunbi_wrapper("ethcny", _get_value('yunbi','apikey'), _get_value('yunbi','secret'))
 
-	def test_order_book(self):
-		print(self.wrapper.order_book())
+	# def test_order_book(self):
+	# 	print(self.wrapper.order_book())
 
-	def test_rate(self):
-		print(self.wrapper.btc_cny_rate())
+	# def test_rate(self):
+	# 	print(self.wrapper.btc_cny_rate())
+
+	def test_ticker_pairs(self):
+		pairs = ["sccny"]
+		print(self.wrapper.ticker_pairs(pairs))
 
 
 if __name__ == '__main__':

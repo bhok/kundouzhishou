@@ -5,15 +5,31 @@ from copy import copy
 
 interested_list = ["cny", "btc","eth"]
 
+pairs_map = {"sc":"sccny"}
+
 class yunbi_wrapper():
 	def __init__(self, currency_pair, apikey, secret):
 		self.client = yunbi(apikey, secret)
 		self.currency_pair = currency_pair
 
+	def name(self):
+		return "yunbi"
+
 	def btc_cny_rate(self):
 		path = self.client.get_api_path('tickers') % "btccny"
 		info = self.client.get_by_path(path, {}, False)
 		return float(info["ticker"]["last"])
+
+	def ticker(self, pair):
+		path = self.client.get_api_path('tickers') % self._get_pairs(pair) 
+	 	info = self.client.get_by_path(path, {}, False)
+
+	def ticker_pairs(self, pairs):
+		for pair in pairs:
+			path = self.client.get_api_path('tickers') % self._get_pairs(pair) 
+	 		info = self.client.get_by_path(path, {}, False)
+	 		print info
+		return []
 
 
 	# "accounts":[{"currency":"cny","balance":"0.0","locked":"0.0"},{}]
@@ -38,6 +54,13 @@ class yunbi_wrapper():
 		bids = sorted(bids, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=True)
 
 		return bids,asks
+
+	def _get_pairs(self, name):
+		if name in pairs_map:
+			return pairs_map[name]
+
+		return name + "cny"
+
 
 	def _parse_order(self, orders):
 		result = []

@@ -5,7 +5,7 @@ class exchange_monitor():
 		self.exchange = exchange
 
 	def ticker(self):
-		
+		self.exchange
 
 def ticker():
 	print("ticker")

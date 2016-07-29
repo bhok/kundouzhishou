@@ -4,10 +4,12 @@ import os
 
 interested_list = ["btc","eth"]
 
+currency_pair_t = 'BTC_{0}'
+default_currency = 'btc'
+
 class poloniex_wrapper():
-	def __init__(self, currency_pair, apikey, secret):
+	def __init__(self, apikey, secret):
 		self.client = poloniex(apikey, secret)
-		self.currency_pair = currency_pair
 
 	def name(self):
 		return "poloniex"
@@ -20,21 +22,37 @@ class poloniex_wrapper():
 			result[interested_key] = {"balance":info[interested_key.upper()],'locked':0}
 		return result
 
-	# {u'bids': [[u'0.00000100', 2911945.7967204], [u'0.00000099', 1475490.160369], [u'0.00000098', 12760756.47514],
-	def order_book(self):
-		info = self.client.returnOrderBook(self.currency_pair)
+	# {u'BTC_RBY': {u'last': u'0.00019100', u'quoteVolume': u'9103.36897373', u'high24hr': u'0.00019225', u'isFrozen': u'0', u'highestBid': u'0.00018671', u'percentChange': u'-0.00650195', u'low24hr': u'0.00018502', u'lowestAsk': u'0.00019036', u'id': 81, u'baseVolume': u'1.73504955'},
+	# @return [{'price':xx,'curreny':xxx}, {}]
+	def ticker_pairs(self, pairs):
+		result = []
+		info =  self.client.returnTicker()
+
+		for pair in pairs:
+			key = self._get_pairs(pair)
+			result.append({'price':float(info[key]['last']), 'currency':pair})
+
+		return result
+
+	# @response {u'bids': [[u'0.00000100', 2911945.7967204], [u'0.00000099', 1475490.160369], [u'0.00000098', 12760756.47514],
+	# @return [{'volume':xxx,'price':xxx,'currency':xxx}, {}]
+	def order_book(self, currency):
+		info = self.client.returnOrderBook(self._get_pairs(currency))
 		bids = []
 		for bid_item in info["bids"]:
-			bids.append({"volume":bid_item[1], "price":bid_item[0], "currency":"btc"})
+			bids.append({"volume":bid_item[1], "price":bid_item[0], "currency":default_currency})
 
 		asks = []
 		for ask_item in info["asks"]:
-			asks.append({"volume":float(ask_item[1]), "price":float(ask_item[0]), "currency":"btc"})
+			asks.append({"volume":float(ask_item[1]), "price":float(ask_item[0]), "currency":default_currency})
 
 		asks = sorted(asks, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=False)
 		bids = sorted(bids, cmp=lambda x,y : cmp(x["price"], y["price"]),key=None,reverse=True)
 
 		return bids,asks
+
+	def _get_pairs(self, name):
+		return str.format(currency_pair_t, name.upper())
 
 if __name__ == '__main__':
 	wrapper = poloniex_wrapper()

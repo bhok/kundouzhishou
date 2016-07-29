@@ -6,7 +6,7 @@ from context import _get_value
 
 class BasicTestSuite(unittest.TestCase):
 	def setUp(self):
-		self.wrapper = yunbi_wrapper("ethcny", _get_value('yunbi','apikey'), _get_value('yunbi','secret'))
+		self.wrapper = yunbi_wrapper(_get_value('yunbi','apikey'), _get_value('yunbi','secret'))
 
 	# def test_order_book(self):
 	# 	print(self.wrapper.order_book())
@@ -15,8 +15,8 @@ class BasicTestSuite(unittest.TestCase):
 	# 	print(self.wrapper.btc_cny_rate())
 
 	def test_ticker_pairs(self):
-		pairs = ["sccny"]
-		print(self.wrapper.ticker_pairs(pairs))
+		pairs = ["sc"]
+		print self.wrapper.ticker_pairs(pairs)
 
 
 if __name__ == '__main__':

@@ -7,10 +7,11 @@ TRX_FEE = 0.003
 MIN_EXPECT_PROFIT = 20
 
 class exchange_pair():
-	def __init__(self, ex_yunbi, exA, exB):
+	def __init__(self, currency, ex_yunbi, exA, exB):
 		self._ex_yunbi = ex_yunbi
 		self._ex_A = exA
 		self._ex_B = exB
+		self._currency = currency
 
 	def run(self):
 		self._btc_cny_rate = self._ex_yunbi.btc_cny_rate()
@@ -18,8 +19,8 @@ class exchange_pair():
 		self._balance_A = self._ex_A.balance()
 		self._balance_B = self._ex_B.balance()
 
-		A_bids, A_asks = self._ex_A.order_book()
-		B_bids, B_asks = self._ex_B.order_book()
+		A_bids, A_asks = self._ex_A.order_book(self._currency)
+		B_bids, B_asks = self._ex_B.order_book(self._currency)
 
 		target_volume, expect_income = self._check_bid_ask(A_bids, B_asks)
 		if expect_income > MIN_EXPECT_PROFIT:
@@ -65,12 +66,12 @@ class exchange_pair():
 
 			ask_order["volume"] -= min_valume
 			if not ask_order["volume"] > 0:
-				print('remove ask')
+				# print('remove ask')
 				asks.remove(ask_order)
 
 			bid_order['volume'] -= min_valume
 			if not bid_order['volume'] > 0:
-				print('remove volume')
+				# print('remove volume')
 				bids.remove(bid_order)
 
 			print("new state, bids =", bids,' asks=', asks)

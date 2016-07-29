@@ -14,10 +14,10 @@ import core.exchange_pair as exchange_pair
 PUSHOVER_APP_ID = "azh9bmnsj6soq29j1xsmz161neg9ui"
 
 def run():
-	exchange_yunbi = yunbi_wrapper("etccny", _get_value('yunbi','apikey'), _get_value('yunbi','secret'))
-	exchange_poloniex = poloniex_wrapper("BTC_ETC", _get_value('poloniex','apikey'), _get_value('poloniex','secret'))
+	exchange_yunbi = yunbi_wrapper(_get_value('yunbi','apikey'), _get_value('yunbi','secret'))
+	exchange_poloniex = poloniex_wrapper(_get_value('poloniex','apikey'), _get_value('poloniex','secret'))
 
-	ex_pair = exchange_pair(exchange_yunbi, exchange_yunbi, exchange_poloniex)
+	ex_pair = exchange_pair('etc',exchange_yunbi, exchange_yunbi, exchange_poloniex)
 	info = ex_pair.run()
 
 	if info != None and len(info) > 0:

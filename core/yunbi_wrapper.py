@@ -7,10 +7,12 @@ interested_list = ["cny", "btc","eth"]
 
 pairs_map = {"sc":"sccny"}
 
+currency_pair_t = '{0}cny'
+default_currency = 'cny'
+
 class yunbi_wrapper():
-	def __init__(self, currency_pair, apikey, secret):
+	def __init__(self, apikey, secret):
 		self.client = yunbi(apikey, secret)
-		self.currency_pair = currency_pair
 
 	def name(self):
 		return "yunbi"
@@ -20,16 +22,19 @@ class yunbi_wrapper():
 		info = self.client.get_by_path(path, {}, False)
 		return float(info["ticker"]["last"])
 
-	def ticker(self, pair):
-		path = self.client.get_api_path('tickers') % self._get_pairs(pair) 
+	# {"at":1469766261,"ticker":{"buy":"0.00438","sell":"0.0044","low":"0.00415","high":"0.00449","last":"0.00439","vol":"182339304.0"}}
+	def ticker(self, currency):
+		path = self.client.get_api_path('tickers') % self._get_pairs(currency) 
 	 	info = self.client.get_by_path(path, {}, False)
+	 	return {'price':float(info['ticker']['last']),'currency':currency}
 
+	 # @return [{'price':xx,'curreny':xxx}, {}]
 	def ticker_pairs(self, pairs):
-		for pair in pairs:
-			path = self.client.get_api_path('tickers') % self._get_pairs(pair) 
-	 		info = self.client.get_by_path(path, {}, False)
-	 		print info
-		return []
+	 	result = []
+	 	for pair in pairs:
+	 		result.append(self.ticker(pair))
+
+	 	return result
 
 
 	# "accounts":[{"currency":"cny","balance":"0.0","locked":"0.0"},{}]
@@ -45,8 +50,8 @@ class yunbi_wrapper():
 		return result
 
 	# {u'created_at': u'2016-07-22T15:19:31Z', u'trades_count': 0, u'remaining_volume': u'1257807.0', u'price': u'0.00463', u'side': u'buy', u'volume': u'1257807.0', u'state': u'wait', u'ord_type': u'limit', u'avg_price': u'0.0', u'executed_volume': u'0.0', u'id': 221602221, u'market': u'sccny'}
-	def order_book(self):
-		info = self.client.get('order_book', params={'market': self.currency_pair,'asks_limit': 50, 'bids_limit':50})
+	def order_book(self, currency, limit=100):
+		info = self.client.get('order_book', params={'market': self._get_pairs(currency),'asks_limit': limit, 'bids_limit':limit})
 		asks = self._parse_order(info["asks"])
 		bids = self._parse_order(info["bids"])
 
@@ -56,10 +61,7 @@ class yunbi_wrapper():
 		return bids,asks
 
 	def _get_pairs(self, name):
-		if name in pairs_map:
-			return pairs_map[name]
-
-		return name + "cny"
+		return str.format(currency_pair_t, name.lower())
 
 
 	def _parse_order(self, orders):
@@ -72,7 +74,7 @@ class yunbi_wrapper():
 					old_order["volume"] = float(old_order["volume"]) + float(order["remaining_volume"])
 
 			if not find_tag:
-				result.append({"volume":float(order["remaining_volume"]), "price":float(order["price"]),"currency":"cny"})
+				result.append({"volume":float(order["remaining_volume"]), "price":float(order["price"]),"currency":default_currency})
 
 
 		return result

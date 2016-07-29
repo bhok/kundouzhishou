@@ -28,16 +28,7 @@ class exchange_monitor():
 			else:
 				old_info = json.loads(f.read())
 
-		for new_pair in new_info:
-			for old_pair in old_info:
-				if new_pair['currency'] == old_pair['currency']:
-					offset = new_pair['price'] - old_pair['price']
-					if offset / old_pair['price'] > point or offset / old_pair['price'] < -point:
-						currency = new_pair['currency']
-						bids, asks = self.exchange.order_book(currency)
-						self._record(currency, new_pair['price'], old_pair['price'], bids, asks)
-
-					break
+		self._check(new_info, old_info)
 
 
 		with open(file_path, 'wb') as f:
@@ -45,17 +36,32 @@ class exchange_monitor():
 
 		print(new_info)
 
+	def _check(self, new_info, old_info):
+		for new_pair in new_info:
+			for old_pair in old_info:
+				if new_pair['currency'] == old_pair['currency']:
+					offset = new_pair['price'] - old_pair['price']
+					if offset / old_pair['price'] > point or offset / old_pair['price'] < -point:
+						currency = new_pair['currency']
+						bids, asks = self.exchange.order_book(currency, 150)
+						self._record(currency, new_pair['price'], old_pair['price'], bids, asks)
+
+					break
+
 	def _record(self, currency, new_price, old_price, bids, asks):
-		rate = (new_price - old_price) / old_price
+		rate = round((new_price - old_price) / old_price, 3) * 100
+
+		print('bids = ',bids)
+		print('asks = ',asks)
 		
 		bid_volume_offset = {}
 		for bid_order in bids:
 			for p_offset in price_offset:
 				if bid_order['price'] > new_price * (1 - p_offset):
 					if p_offset in bid_volume_offset:
-						bid_volume_offset[p_offset] += bid_order['volume'] * bid_order['price']
+						bid_volume_offset[p_offset] += float(bid_order['volume']) * float(bid_order['price'])
 					else:
-						bid_volume_offset[p_offset] = bid_order['volume'] * bid_order['price']
+						bid_volume_offset[p_offset] = float(bid_order['volume']) * float(bid_order['price'])
 
 					break
 
@@ -70,9 +76,17 @@ class exchange_monitor():
 
 					break
 
-		print(str.format('name={0},last_price={1},new_pair={2},offset={3}'))
-		print(bid_volume_offset)
-		print(ask_volume_offset)
+		for k,v in bid_volume_offset.iteritems():
+			bid_volume_offset[k] = round(v,2)
+
+
+		for k,v in ask_volume_offset.iteritems():
+			ask_volume_offset[k] = round(v,2)
+
+		print(str.format('name={0},last_price={1},new_pair={2},offset={3}', currency, old_price, new_price, rate))
+		print('bid volume = ', bid_volume_offset)
+		print('ask volume = ', ask_volume_offset)
+		
 
 
 def ticker():

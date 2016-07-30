@@ -7,9 +7,13 @@ import core.core as core
 
 import core.exchange.yunbi as yunbi
 import core.exchange.poloniex as poloniex
+import core.exchange.bittrex as bittrex
 
 import core.yunbi_wrapper as yunbi_wrapper
 import core.poloniex_wrapper as poloniex_wrapper
+import core.bittrex_wrapper as bittrex_wrapper
+
+
 import core.exchange_pair as exchange_pair
 
 def _get_value(section, key):

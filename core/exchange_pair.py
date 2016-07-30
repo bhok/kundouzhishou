@@ -4,7 +4,8 @@ from poloniex_wrapper import poloniex_wrapper
 from yunbi_wrapper import yunbi_wrapper
 
 TRX_FEE = 0.003
-MIN_EXPECT_PROFIT = 20
+BTC_CNY_RATE = 4360
+MIN_EXPECT_PROFIT = 20 / BTC_CNY_RATE
 
 class exchange_pair():
 	def __init__(self, currency, ex_yunbi, exA, exB):
@@ -14,10 +15,10 @@ class exchange_pair():
 		self._currency = currency
 
 	def run(self):
-		self._btc_cny_rate = self._ex_yunbi.btc_cny_rate()
+		# self._btc_cny_rate = self._ex_yunbi.btc_cny_rate()
 
-		self._balance_A = self._ex_A.balance()
-		self._balance_B = self._ex_B.balance()
+		# self._balance_A = self._ex_A.balance()
+		# self._balance_B = self._ex_B.balance()
 
 		A_bids, A_asks = self._ex_A.order_book(self._currency)
 		B_bids, B_asks = self._ex_B.order_book(self._currency)
@@ -39,8 +40,9 @@ class exchange_pair():
 		return None
 
 	def _check_bid_ask(self, bids, asks):
-		bids = self._transfor_currency(bids)
-		asks = self._transfor_currency(asks)
+		# todo btc-btc
+		# bids = self._transfor_currency(bids)
+		# asks = self._transfor_currency(asks)
 
 		expect_income = 0
 		target_volume = 0
@@ -52,8 +54,8 @@ class exchange_pair():
 			ask_order = asks[0]
 			bid_order = bids[0]
 
-			print("ask order = ", ask_order)
-			print("bid_order = ", bid_order)
+			print("ask order[0] = ", ask_order)
+			print("bid order[0] = ", bid_order)
 
 			price_gap = bid_order['price'] - ask_order['price']
 			if not price_gap > 0:
@@ -74,8 +76,9 @@ class exchange_pair():
 				# print('remove volume')
 				bids.remove(bid_order)
 
-			print("new state, bids =", bids,' asks=', asks)
-			print('expect_income = ', expect_income)
+			# print("new state, bids =", bids,' asks=', asks)
+		
+		print('expect_income = ', expect_income)
 		return target_volume, expect_income
 
 	# {'volume': 1725783.0459525, 'currency': 'btc', 'price': 1.02e-06}

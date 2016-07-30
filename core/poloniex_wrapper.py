@@ -36,7 +36,7 @@ class poloniex_wrapper():
 
 	# @response {u'bids': [[u'0.00000100', 2911945.7967204], [u'0.00000099', 1475490.160369], [u'0.00000098', 12760756.47514],
 	# @return [{'volume':xxx,'price':xxx,'currency':xxx}, {}]
-	def order_book(self, currency, depth = 50):
+	def order_book(self, currency, depth = 5000):
 		info = self.client.returnOrderBook(self._get_pairs(currency), depth)
 		bids = []
 		for bid_item in info["bids"]:

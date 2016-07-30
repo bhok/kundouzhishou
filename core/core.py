@@ -2,6 +2,8 @@ import os
 import logging
 import logging.config
 import httplib, urllib
+import MySQLdb
+import conf
 
 dirpath=os.path.dirname(os.path.abspath(__file__))
 logging.config.fileConfig(dirpath + '/../logging.conf')  
@@ -23,3 +25,28 @@ def pushover(app_id, content):
 			"message": content,
 			"sound":"Persistent"
 	}), { "Content-type": "application/x-www-form-urlencoded" })
+
+def execute_sql(sql):
+	dirpath = os.path.dirname(os.path.abspath(__file__))
+	conf.init(dirpath + "/db.ini")
+
+	section = 'mysql'
+	host = conf.get_value(section, "host")
+	username = conf.get_value(section, "username")
+	password = conf.get_value(section, "password")
+	database = conf.get_value(section, "database")
+	db = MySQLdb.connect(host,username,password,database)
+	cursor = db.cursor()
+	
+	# sql = db.escape_string(sql)
+	
+	logger.debug("execute sql:" + sql)
+
+	try:
+		cursor.execute(sql)
+		db.commit()
+	except Exception,err:
+		print(err)
+		db.rollback()
+
+	db.close()

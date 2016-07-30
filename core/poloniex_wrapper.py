@@ -40,7 +40,7 @@ class poloniex_wrapper():
 		info = self.client.returnOrderBook(self._get_pairs(currency), depth)
 		bids = []
 		for bid_item in info["bids"]:
-			bids.append({"volume":bid_item[1], "price":bid_item[0], "currency":default_currency})
+			bids.append({"volume":float(bid_item[1]), "price":float(bid_item[0]), "currency":default_currency})
 
 		asks = []
 		for ask_item in info["asks"]:

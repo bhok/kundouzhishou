@@ -28,5 +28,22 @@ class BasicTestSuite(unittest.TestCase):
     	asks = [{'price':10.3,'volume':10},{'price':12,'volume':100},{'price':15,'volume':1000}]
     	# self.monitor._record("sc", 9.7, 11.1, bids, asks)
 
+	def test_ticker(self):
+		self.monitor.ticker()
+
+	# name,last_price,new_price,offset,bids_volumes, asks_volumes):
+	def test_writeDB(self):
+		bids = {}
+		asks = {}
+		price_offset=[0.1,0.2,0.3,0.5]
+		for offset in price_offset:
+			bids[offset] = 10
+			asks[offset] = 9
+
+		self.monitor._writeDB("test", 11, 10, -10, bids, asks)
+
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(BasicTestSuite('test_ticker'))
+    unittest.TextTestRunner().run(suite)

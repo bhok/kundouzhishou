@@ -15,8 +15,8 @@ class BasicTestSuite(unittest.TestCase):
 
 	def test_check(self):
 		new_info = [{"currency": "etc", "price": 0.0026334}, {"currency": "fct", "price": 0.00253}, {"currency": "sc", "price": 1.01e-06}, {"currency": "lbc", "price": 0.00073336}, {"currency": "amp", "price": 0.000178}]
-		old_info = [{"currency": "etc", "price": 0.0029334}, {"currency": "fct", "price": 0.00253}, {"currency": "sc", "price": 1.02e-06}, {"currency": "lbc", "price": 0.00051336}, {"currency": "amp", "price": 0.000172}]
-		self.monitor._check(new_info, old_info)
+		old_info = [{"currency": "etc", "price": 0.0029334}, {"currency": "fct", "price": 0.00252}, {"currency": "sc", "price": 1.02e-06}, {"currency": "lbc", "price": 0.00051336}, {"currency": "amp", "price": 0.000172}]
+		print self.monitor._check(new_info, old_info, True)
 
 	def test_record(self):
     	#  currency, new_price, old_price, bids, asks)
@@ -45,5 +45,5 @@ class BasicTestSuite(unittest.TestCase):
 if __name__ == '__main__':
     # unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(BasicTestSuite('test_ticker'))
+    suite.addTest(BasicTestSuite('test_check'))
     unittest.TextTestRunner().run(suite)

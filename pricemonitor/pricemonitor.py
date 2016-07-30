@@ -31,23 +31,30 @@ class exchange_monitor():
 			if len(old_info) == 0:
 				old_info = new_info
 
-		self._check(new_info, old_info)
+		save_info = self._check(new_info, old_info)
 
 
 		with open(file_path, 'wb') as f:
-			f.write(json.dumps(new_info))
+			f.write(json.dumps(save_info))
 
-	def _check(self, new_info, old_info):
+	def _check(self, new_info, old_info, is_test=False):
 		for new_pair in new_info:
 			for old_pair in old_info:
 				if new_pair['currency'] == old_pair['currency']:
 					offset = new_pair['price'] - old_pair['price']
 					if offset / old_pair['price'] > point or offset / old_pair['price'] < -point:
 						currency = new_pair['currency']
-						bids, asks = self.exchange.order_book(currency, ORDER_DEPTH)
-						self._record(currency, new_pair['price'], old_pair['price'], bids, asks)
+
+						if not is_test:
+							bids, asks = self.exchange.order_book(currency, ORDER_DEPTH)
+							self._record(currency, new_pair['price'], old_pair['price'], bids, asks)
+
+						# change price
+						old_pair['price'] = new_pair['price']
 
 					break
+
+		return old_info
 
 	def _record(self, currency, new_price, old_price, bids, asks):
 		rate = round((new_price - old_price) / old_price, 3) * 100
